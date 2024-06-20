@@ -1,15 +1,13 @@
 ---
-- hosts: ws
+- hosts: all
   become: yes
-  gather_facts: no
+  gather_facts: yes
   tasks:
     - name: Install nginx
       apt:
         name: nginx
         state: present
         update_cache: yes
-      tags:
-        - apt_get
       when:  ansible_os_family=="Debian"
     - name: Install nginx on redhat family
       package:
@@ -35,9 +33,6 @@
       file:
         path: /var/www/html/index.html
         state: touch
-      register: file_output
-      tags:
-         - a
     - name: Create directory
       file:
         path: /tmp/os
@@ -45,7 +40,5 @@
     
     - name : Copy content to index
       copy:
-        dest: file_output.diff.before.path
+        dest: /var/www/html/index.html
         content: '<h1>This is created using ansible</h1>'
-
-
